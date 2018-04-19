@@ -5,18 +5,27 @@
  */
 package controller;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Adrián-Trabajo
  */
 public class Seta {
-
-    public Seta(String line) {
-        /*String[] elements = line.split(",");
-            for (String element : atributos) {
-                Node n = new Node(node);
-                lista_atributos.add(n);
-            }*/
-    }
     
+    private String name;
+    private ArrayList<Value> values = new ArrayList<>();
+    
+    public Seta(String[] elements) {
+        this.name = elements[elements.length-1];
+        addValue(elements);
+    }
+
+    void addValue(String[] elements) {
+        values.add(new Value(elements));
+    }
+
+    Object getName() {
+        return this.name;
+    }
 }

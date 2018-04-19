@@ -40,10 +40,21 @@ public class Main {
                     lista_atributos.get(i).addValue(new Value(ejemplos[i], ejemplos[ejemplos.length-1], idx));
                 }
                 lista_ejemplos.add(idx);*/
-                line = in.readLine();
                 //idx++;
-                Seta s = new Seta(line);
-                lista_setas.add(s);
+                String[] elements = line.split(",");
+                boolean exists = false;
+                for(int i = 0; i < lista_setas.size(); i++) {
+                    if(elements[elements.length-1].equals(lista_setas.get(i).getName())) {
+                        exists = true;
+                        lista_setas.get(i).addValue(elements);
+                    }
+                }
+                
+                if(!exists) {
+                    Seta s = new Seta(elements);
+                    lista_setas.add(s);
+                }
+                line = in.readLine();
             }
             in.close();
             
