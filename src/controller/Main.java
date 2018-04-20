@@ -58,6 +58,8 @@ public class Main {
             }
             in.close();
             
+            KMeans KmAlgorithm = new KMeans(lista_setas);
+            
             /*System.out.println("Introduzca el nombre del fichero (con .txt) de los ejemplos");
             file = br.readLine();
             
