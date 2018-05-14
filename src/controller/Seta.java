@@ -7,10 +7,6 @@ package controller;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author Adrián-Trabajo
- */
 public class Seta {
     
     private String name;
