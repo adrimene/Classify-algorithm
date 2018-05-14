@@ -14,15 +14,21 @@ import java.util.ArrayList;
 public class Seta {
     
     private String name;
-    private ArrayList<Value> values = new ArrayList<>();
+    private ArrayList<ArrayList<String>> values = new ArrayList<>();
+    private int NParameters;
     
     public Seta(String[] elements) {
         this.name = elements[elements.length-1];
-        addValue(elements);
+        this.values = new ArrayList<>();
+        this.NParameters = elements.length-1;
     }
 
     public void addValue(String[] elements) {
-        values.add(new Value(elements));
+        ArrayList<String> value = new ArrayList<>();
+        for(int i = 0; i < elements.length-1; i++) {
+            value.add(elements[i]);
+        }
+        values.add(value);
     }
 
     public String getName() {
@@ -34,18 +40,10 @@ public class Seta {
     }
 
     public int getNParameters() {
-        return this.values.get(0).getSize();
+        return this.NParameters;
     }
 
-    double[] centrosIniciales() {
-        double[] solution = new double[getNParameters()];
-        for(int i = 0; i < solution.length; i++)
-            solution[i] = 0;
-        for(Value v: values) {
-            solution = v.sumParameters(solution);
-        }
-        for(int i = 0; i < solution.length; i++)
-            solution[i] = solution[i] / values.size();
-        return solution;
+    public ArrayList<String> getValue(int idx) {
+        return this.values.get(idx);
     }
 }

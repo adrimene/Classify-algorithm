@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,7 @@ public class Main {
         String file = "";
         
         try {
-            System.out.println("Introduzca el nombre del fichero (con .txt) de los atributos");
+            System.out.println("Introduzca el nombre del fichero con los datos (con la extensión .txt) de los atributos");
             file = br.readLine();
             
             BufferedReader in = new BufferedReader(new FileReader(file));
@@ -52,6 +53,7 @@ public class Main {
                 
                 if(!exists) {
                     Seta s = new Seta(elements);
+                    s.addValue(elements);
                     lista_setas.add(s);
                 }
                 line = in.readLine();
@@ -60,6 +62,21 @@ public class Main {
             
             KMeans KmAlgorithm = new KMeans(lista_setas);
             
+            KmAlgorithm.entrenamiento();
+            
+            System.out.println("Ahora se especificarán 3 ficheros con pruebas de setas \n");
+            for(int i = 0; i < 3; i++) {
+                System.out.println("Introduzca el nombre de una prueba (con .txt) de los ejemplos");
+                file = br.readLine();
+
+                in = new BufferedReader(new FileReader(file));
+                line = in.readLine();
+                String[] elementos = line.split(",");
+                System.out.println("La seta es de la clase " + elementos[elementos.length-1]);
+                
+                ArrayList<String> prueba = new ArrayList<>(Arrays.asList(elementos));
+                System.out.println(KmAlgorithm.clasificacion(prueba));
+            }
             /*System.out.println("Introduzca el nombre del fichero (con .txt) de los ejemplos");
             file = br.readLine();
             
