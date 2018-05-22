@@ -54,10 +54,13 @@ public class Main {
             }
             in.close();
             
+            Bayes BayesAlgorithm = new Bayes(lista_setas);
+            
+            BayesAlgorithm.entrenamiento();
+            
             KMeans KmAlgorithm = new KMeans(lista_setas);
             
             KmAlgorithm.entrenamiento();
-            
             System.out.println("Ahora se especificarán 3 ficheros con pruebas de setas \n");
             for(int i = 0; i < 3; i++) {
                 System.out.println("Introduzca el nombre de una prueba (con .txt) de los ejemplos");
@@ -70,6 +73,7 @@ public class Main {
                 
                 ArrayList<String> prueba = new ArrayList<>(Arrays.asList(elementos));
                 System.out.println(KmAlgorithm.clasificacion(prueba));
+                System.out.println(BayesAlgorithm.clasificacion(prueba));
             }
            
         } catch(FileNotFoundException e) {

@@ -11,40 +11,26 @@ import java.util.ArrayList;
  *
  * @author Adrián-Trabajo
  */
-public class KMeans {
-
+public class Bayes {
+    
     private ArrayList<Seta> setas;
     private int NMuestras;
-    private float tolerancia;
-    private int b;
-    private float[][] v;
-    private float[][] d;
+    private ArrayList<ArrayList<Float>> centros;
     
-    KMeans(ArrayList<Seta> lista_setas) {
+    Bayes(ArrayList<Seta> lista_setas) {
         setas = lista_setas;
-        int val = setas.get(0).getNParameters();
-        v = new float[setas.size()][val];
-        
         NMuestras = 0;
+        
         for(int i = 0; i < lista_setas.size(); i++) {
             NMuestras += lista_setas.get(i).getMuestras();
         }
-        
-        tolerancia = (float) 0.01;
-        b = 2;
-        
-        v[0][0] = (float) 4.6;
-        v[0][1] = (float) 3;
-        v[0][2] = (float) 4;
-        v[0][3] = (float) 0;
-        v[1][0] = (float) 6.8;
-        v[1][1] = (float) 3.4;
-        v[1][2] = (float) 4.6;
-        v[1][3] = (float) 0.7;
+        centros = new ArrayList();
     }
     
     public void entrenamiento() {
-        boolean itera;
+        centros = calcM();
+        
+        /*boolean itera;
         int laps = -1;
         float[][] p = new float[setas.get(0).getMuestras()*setas.size()][setas.size()];
         do {
@@ -65,56 +51,57 @@ public class KMeans {
                 if(diferencia[i] > this.tolerancia)
                     itera = true;
             }
-        } while (itera);
+        } while (itera);*/
     }
     
     public String clasificacion(ArrayList<String> prueba) {
         String res = "";
         
-        float[] p = calcP(prueba);
+        float[] d = calcD(prueba);
         
         int idx = 0;
-        for(int i = 1; i < p.length; i++) {
-            if(p[i] > p[idx])
+        for(int i = 1; i < d.length; i++) {
+            if(d[i] < d[idx])
                 idx = i;
         }
         
-        res = "Según el algoritmo K-Means la seta es de la clase " + this.setas.get(idx).getName() + "\nLas pertenencias son:\n";
+        res = "Según el algoritmo de Bayes la seta es de la clase " + this.setas.get(idx).getName() + "\nLas distancias son:\n";
         
-        for(int i = 0; i < p.length; i++) {
-            res += "Clase " + this.setas.get(i).getName() + ": " + p[i] + "\n";
+        for(int i = 0; i < d.length; i++) {
+            res += "Clase " + this.setas.get(i).getName() + ": " + d[i] + "\n";
         }
         
         return res;
     }
 
-    private float[] calcP(ArrayList<String> value) {
-        float[] p = new float[setas.size()];
-        float[] d = new float[setas.size()];
-        float auxD = 0;
-        int exp = 1/(b-1);
-        
-        for(int i = 0; i < v.length; i++) {
-            d[i] = calcD(this.v[i], value);
-            auxD += Math.pow((1/d[i]), exp);
+    private ArrayList<ArrayList<Float>> calcM() {
+        ArrayList<ArrayList<Float>> m = new ArrayList();
+        for(int i = 0; i < setas.size(); i++){
+            m.add(new ArrayList());
+            for(int j = 0; j < setas.get(i).getNParameters(); j++)
+                m.get(i).add((float) 0);
         }
-        
-        
-        for(int i = 0; i < v.length; i++) {
-            p[i] = ((float) Math.pow((1/d[i]), exp) / (auxD));
-        }
-        
-        return p;
-    }
-
-    private float calcD(float[] v, ArrayList<String> value) {
-        float res = 0;
-        for (int i = 0; i < v.length; i++) {
-            res += Math.pow(Float.parseFloat(value.get(i))-v[i], 2);
-        }
-        return res;
+        for(int i = 0; i < setas.size(); i++)
+            for(int j = 0; j < setas.get(i).getMuestras(); j++)
+                for(int k = 0; k < setas.get(i).getNParameters(); k++)
+                    m.get(i).set(k, (Float.parseFloat(setas.get(i).getValue(j).get(k))/setas.get(i).getMuestras())+m.get(i).get(k));
+        return m;
     }
     
+    private float[] calcD(ArrayList<String> value) {
+        float[] d = new float[setas.size()];
+        
+        for(int i = 0; i < d.length; i++) {
+            float res = 0;
+            for (int j = 0; j < this.centros.size(); j++) {
+                res += Math.pow(Float.parseFloat(value.get(j))-this.centros.get(i).get(j), 2);
+            }
+            d[i] = (float) Math.sqrt(res);
+        }
+        
+        return d;
+    }
+ /*   
     private float[] ajustaCentros(float[][] p) {
         float[][] v = new float[this.v.length][this.v[0].length];
         float[] auxDivisor = new float[this.v.length];
@@ -150,5 +137,5 @@ public class KMeans {
             aux += Math.pow((nV[i]-oV[i]), 2);
         }
         return (float) Math.sqrt(aux);
-    }
+    }*/
 }
